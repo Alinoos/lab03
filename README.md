@@ -372,9 +372,15 @@ $ cmake --build _build
 [ 83%] Building CXX object CMakeFiles/hello_world.dir/hello_world.cpp.o
 [100%] Linking CXX executable hello_world
 [100%] Built target hello_world
+$ ./_build/hello_world
+-------------------------
+hello, world!
+-------------------------
 
 
 ```
+
+
 
 **Удачной стажировки!**
 
