@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/example.dir/hello_world.cpp.o -o example  -lformatter_ex 
