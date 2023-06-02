@@ -166,6 +166,8 @@ $ gist REPORT.md
 Создайте `CMakeList.txt` в директории [formatter_lib](formatter_lib),
 с помощью которого можно будет собирать статическую библиотеку *formatter*.
 ```sh
+$ mkdir formatter_lib
+$ cd formatter_lib
 $ cat >> CMakeLists.txt <<EOF 
 > EOF
 $ nano CMakeLists.txt 
@@ -194,6 +196,7 @@ $ cmake --build _build
 [ 50%] Building CXX object CMakeFiles/formatter_lib.dir/formatter.cpp.o
 [100%] Linking CXX static library libformatter_lib.a
 [100%] Built target formatter_lib
+$ cd ..
 ```
 ### Задание 2
 У компании "Formatter Inc." есть перспективная библиотека,
@@ -202,6 +205,8 @@ $ cmake --build _build
 руководитель поручает заняться созданием `CMakeList.txt` для библиотеки 
 *formatter_ex*, которая в свою очередь использует библиотеку *formatter*.
 ```sh
+$ mkdir formatter_ex_lib
+$ cd formatter_ex_lib
 $ cat >> CMakeLists.txt <<EOF
 > EOF
 cmake_minimum_required(VERSION 3.4)
@@ -235,6 +240,7 @@ $ cmake --build _build
 [ 75%] Building CXX object CMakeFiles/formatter_ex_lib.dir/formatter_ex.cpp.o
 [100%] Linking CXX static library libformatter_ex_lib.a
 [100%] Built target formatter_ex_lib
+$ cd ..
 ```
 ### Задание 3
 Конечно же ваша компания предоставляет примеры использования своих библиотек.
@@ -243,6 +249,74 @@ $ cmake --build _build
 * *hello_world*, которое использует библиотеку *formatter_ex*;
 * *solver*, приложение которое испольует статические библиотеки *formatter_ex* и *solver_lib*.
 ```sh
+$ mkdir solver_lib
+$ cd solver_lib
+$ cat >> CMakeLists.txt <<EOF
+> EOF
+$ nano CMakeLists.txt
+cmake_minimum_required(VERSION 3.4)
+project(formatter_lib)
+set(CMAKE_CXX_STANDART 11)
+set(CMAKE_CXX_STANDART_REQUIRED ON)
+add_library(formatter_lib STATIC ${CMAKE_CURRENT_SOURCE_DIR})
+$ cmake -B build
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/alina/lab03/solver_lib/build
+$ cmake --build build
+[ 50%] Building CXX object CMakeFiles/solver_lib.dir/solver.cpp.o
+[100%] Linking CXX static library libsolver_lib.a
+[100%] Built target solver_lib
+$ cd ..
+$ mkdir solver_application
+$ cd solver_application
+$ cat >> CMakeLists.txt << EOF
+> EOF
+$ nano CMakeLists.txt
+cmake_minimum_required(VERSION 3.4)
+
+	set(CMAKE_CXX_STANDARD 11)
+	set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+	project(solver_example)
+
+	add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../solver_lib ${CMAKE_CURRENT_BINARY_DIR}/solver_lib)
+	add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../formatter_ex_lib ${CMAKE_CURRENT_BINARY_DIR}/formatter_ex)
+
+	add_executable(example equation.cpp)
+
+	target_link_libraries(example solver_lib formatter_ex)
+ 
+ $ cmake -B build
+-- The C compiler identification is GNU 11.3.0
+-- The CXX compiler identification is GNU 11.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/alina/lab03/solver_application/build
+$ cmake --build _build
+[ 12%] Building CXX object CMakeFiles/formatter_lib.dir/home/alina/lab03/formatter_lib/formatter.cpp.o
+[ 25%] Linking CXX static library libformatter_lib.a
+[ 25%] Built target formatter_lib
+[ 37%] Building CXX object CMakeFiles/solver.dir/home/alina/lab03/solver_lib/solver.cpp.o
+[ 50%] Linking CXX static library libsolver.a
+[ 50%] Built target solver
+[ 62%] Building CXX object CMakeFiles/formatter_ex_lib.dir/home/alina/lab03/formatter_ex_lib/formatter_ex.cpp.o
+[ 75%] Linking CXX static library libformatter_ex_lib.a
+[ 75%] Built target formatter_ex_lib
+[ 87%] Building CXX object CMakeFiles/solver_app.dir/equation.cpp.o
+[100%] Linking CXX executable solver_app
+[100%] Built target solver_app
+
 ```
 
 **Удачной стажировки!**
